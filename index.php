@@ -1,5 +1,13 @@
 <?php
 $genre = $_GET['genre'];
+
+$meta;
+if ($genre) {
+    $meta = "MusicaLibre - legally free ".htmlentities($genre)." music for public usage";
+} else {
+    $meta = "MusicaLibre - legally free music for public usage";
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -7,6 +15,7 @@ $genre = $_GET['genre'];
     <title>MusicaLibre <?php if ($genre) {echo " - ".htmlentities($genre);}?></title>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300' rel='stylesheet' type='text/css'>
+    <meta name="description" content="<?php echo $meta?>" />
     </head>
     <body>
     
@@ -41,7 +50,7 @@ if ($genre) {
 <br><a href="http://karelbilek.com/musicalibre/">Back to main page...</a>
 
 <br><br>
-All songs are licenced under creative commons and fine for commercial usage, such as playing in the restaurants or lounges. <br><br>They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>.
+All songs are licenced under creative commons and fine for public usage, such as playing in the restaurants or lounges. <br><br>They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>. <br><br><small><i>(note: the songs are all with CC-BY, CC-BY-SA or CC-BY-ND licences.)</i></small>
 <script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
 
 
@@ -94,7 +103,7 @@ function realGetTracks(licence, callback, recCount) {
     if (!recCount) {
         recCount = 0;
     }
-    if (recCount > 6) {
+    if (recCount > 30) {
         $('#warning').hide();
         $('#gen-error').show();
     } else {
@@ -154,14 +163,17 @@ loadNextBatch(function() {
              widget.getPosition(function(position) {
                  widget.isPaused(function(paused){
 
-                        if ((!paused) && (lastPosition==position)) {
+                                                    //very rough "heuristics"
+                        if ((!paused) && (lastPosition==position) && (position>=3000)) {
+                                console.log(position);
+                                console.log('^^^');
                                 playNext();
                         }
                         lastPosition=position;
                 });
               });
 
-          },5000);
+          },4000);
 
           widget.bind(SC.Widget.Events.FINISH, function() {
               playNext();
@@ -263,16 +275,16 @@ $('#nextb').click(function() {
     
    
     
-    Play songs available for commercial sharing!
+    Play high quality songs in both personal and commercial spaces for free, legally! 
     <br><br>
-    All are licenced under creative commons and fine for commercial usage for free, such as playing in the restaurants. <br><br>
-    They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>. (As they are uploaded by users, they can vary in quality and genre)<br><br>
+    All songs are licenced under creative commons and fine for free public usage, such as playing in the restaurants or lounges. <br><br>
+    They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>, where they are user-submitted.<br><br>
     
-    The songs can start to repeat after about two hours.
+    (there are currently some playback issues that I am discussing with SoundCloud.com.)
     <br><hr>
     
     <form action="index.php" method="get">Genre name:
-<input type="text" name="genre" value="pop"><br>
+<input type="text" name="genre" value="bossanova"><br>
 <input type="submit" value="Search" class="btn btn-large btn-primary">
 </form>
 <br><br>Searches to try:<br>
@@ -282,7 +294,8 @@ $('#nextb').click(function() {
 <a href="http://karelbilek.com/musicalibre/index.php?genre=poprock">poprock</a><br>
 <a href="http://karelbilek.com/musicalibre/index.php?genre=pop">pop</a><br>
 <a href="http://karelbilek.com/musicalibre/index.php?genre=chillout">chillout</a><br>
-
+<a href="http://karelbilek.com/musicalibre/index.php?genre=swing">swing</a><br>
+<a href="http://karelbilek.com/musicalibre/index.php?genre=dubstep">dubstep</a> WUB WUB WUB<br>
 
 
 <?php
