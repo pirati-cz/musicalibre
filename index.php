@@ -1,4 +1,5 @@
 
+
 <?php
 $genre = $_GET['genre'];
 if ($genre) {
@@ -10,6 +11,7 @@ if ($genre) {
 <div id="warning-player"><big><big>Preparing player...</big></big></div>
 
 <div id="no-songs"><big><big>There were no songs of your genre :( try to be more general</big></big></div>
+<div id="gen-error"><big><big>General error when loading songs. Try to reload.</big></big></div>
 
 <div id="warning"><big><big>Loading songs...</big></big></div>
 <div id="widgetdiv">
@@ -35,6 +37,7 @@ SC.initialize({
 $('#warning-player').hide();
 $('#widgetdiv').hide();
 $('#no-songs').hide();
+$('#gen-error').hide();
 
 var jsonPlayed = localStorage.getItem('played');
 var played;
@@ -51,21 +54,45 @@ var allTracks=[];
 var batchsize = 100;
 var currentOffset=0; //nakonec se nepouziva offset vubec na nic (puvodne jsem predpokladal postupne stahovani)
 function loadNextBatch( callback) {
-    currentOffset = currentOffset+1;
-    var realOffset = batchsize*currentOffset;
+
     var resTracks;
-    SC.get('/tracks', { genres: genre, license: 'cc-by', limit: batchsize , offset: realOffset ,duration: { to: 900000 }, order:'hotness' }, function(tracks) {
+    realGetTracks('cc-by', function(tracks) {    
         resTracks=tracks;
-        SC.get('/tracks', { genres: genre, license: 'cc-by-sa', limit: batchsize , offset: realOffset ,duration: { to: 900000 }, order:'hotness' }, function(tracks) {
+        console.log(resTracks);
+        realGetTracks('cc-by-sa',  function(tracks) {
+        
             resTracks=resTracks.concat(tracks);
+            realGetTracks('cc-by-nd',  function(tracks) {
             
-            SC.get('/tracks', { genres: genre, license: 'cc-by-nd', limit: batchsize , offset: realOffset ,duration: { to: 900000 }, order:'hotness' }, function(tracks) {
                 resTracks=resTracks.concat(tracks);
                 loadedNextBatchFinished(resTracks, callback);
             });
         });
     });   
 }
+
+
+function realGetTracks(licence, callback, recCount) {
+    if (!recCount) {
+        recCount = 0;
+    }
+    if (recCount > 6) {
+        $('#warning').hide();
+        $('#gen-error').show();
+    } else {
+    
+        SC.get('/tracks', { genres: genre, license: licence, limit: batchsize , offset: 0 ,duration: { to: 900000 }, order:'hotness' }, function(resObject) {
+            if (typeof resObject.errors === 'undefined') {
+                callback(resObject);
+            } else {
+                //alert(recCount);
+                setTimeout(function() {realGetTracks(licence, callback, recCount+1)},1000);
+            }
+        });
+    }
+
+}
+
 
 function loadedNextBatchFinished(tracks, callback) {
 
@@ -88,6 +115,10 @@ function loadedNextBatchFinished(tracks, callback) {
 var widgetIframe = document.getElementById('sc-widget');
 var widget       = SC.Widget(widgetIframe);
 
+var lastPosition=-1;
+
+
+
 loadNextBatch(function() {
     
     $('#warning-player').show();
@@ -101,11 +132,28 @@ loadNextBatch(function() {
           widget.play();
           savePlaying(song);
           
+          setInterval(function(){
+             widget.getPosition(function(position) {
+                 widget.isPaused(function(paused){
+
+                        if ((!paused) && (lastPosition==position)) {
+                                playNext();
+                        }
+                        lastPosition=position;
+                });
+              });
+
+          },3000);
+
           widget.bind(SC.Widget.Events.FINISH, function() {
               playNext();
-        });
-     }
-  });
+          
+          
+          });
+       }
+    });
+    
+    
 
 });
 
@@ -185,19 +233,7 @@ $('#nextb').click(function() {
     playNext();
 });
 
-var lastPosition=-1;
-setInterval(function(){
-        widget.getPosition(function(position) {
-                widget.isPaused(function(paused){
 
-                        if ((!paused) && (lastPosition==position)) {
-                                playNext();
-                        }
-                        lastPosition=position;
-                });
-        });
-
-},3000);
 
 </script>
 
