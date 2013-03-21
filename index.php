@@ -38,6 +38,8 @@ if ($genre) {
 <button style="font-size:200%" class="btn btn-large btn-primary" id="pauseb">Pause</button>
 </div>
 
+<br><a href="http://karelbilek.com/musicalibre/">Back to main page...</a>
+
 <br><br>
 All songs are licenced under creative commons and fine for commercial usage, such as playing in the restaurants or lounges. <br><br>They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>.
 <script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
