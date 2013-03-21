@@ -224,3 +224,6 @@ setInterval(function(){
 
 <?php
 }?>
+
+<br><br>
+<a href="https://github.com/pirati-cz/musicalibre">Fork on GitHub!</a>
