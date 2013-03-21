@@ -1,5 +1,4 @@
 
-
 <?php
 $genre = $_GET['genre'];
 if ($genre) {
@@ -227,3 +226,4 @@ setInterval(function(){
 
 <br><br>
 <a href="https://github.com/pirati-cz/musicalibre">Fork on GitHub!</a>
+<!---Validity? Ain't nobody got time for that!--->
