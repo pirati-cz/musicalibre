@@ -1,7 +1,23 @@
-
-
 <?php
 $genre = $_GET['genre'];
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MusicaLibre <?php if ($genre) {echo " - ".htmlentities($genre);}?></title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+    
+    <div class="container">
+    
+    
+    <center><h1 style="font-family: 'Merriweather Sans', sans-serif;">MusicaLibre<?php if ($genre) {echo  " - ".htmlentities($genre);}?></h1>
+    
+
+<?php
+
 if ($genre) {
 ?>
 <script src="http://connect.soundcloud.com/sdk.js"></script>
@@ -17,13 +33,13 @@ if ($genre) {
 <div id="widgetdiv">
 <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1848538&show_artwork=true"></iframe>
 <br>
-<button style="font-size:300%" id="nextb">Next song &gt;</button> 
-<button style="font-size:300%" id="playb">Play</button>
-<button style="font-size:300%" id="pauseb">Pause</button>
+<button id="nextb"  style="font-size:200%" class="btn btn-large btn-inverse">Next song &gt;</button> 
+<button style="font-size:200%" class="btn btn-large btn-primary" id="playb">Play</button>
+<button style="font-size:200%" class="btn btn-large btn-primary" id="pauseb">Pause</button>
 </div>
 
 <br><br>
-All songs are licenced under creative commons and fine for commercial usage, such as playing in the restaurants or lounges. They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>.
+All songs are licenced under creative commons and fine for commercial usage, such as playing in the restaurants or lounges. <br><br>They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>.
 <script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
 
 
@@ -58,7 +74,7 @@ function loadNextBatch( callback) {
     var resTracks;
     realGetTracks('cc-by', function(tracks) {    
         resTracks=tracks;
-        console.log(resTracks);
+
         realGetTracks('cc-by-sa',  function(tracks) {
         
             resTracks=resTracks.concat(tracks);
@@ -106,7 +122,7 @@ function loadedNextBatchFinished(tracks, callback) {
         tracks.sort(sortSongs);
         subTracks = tracks.slice(0, 50);
         allTracks = subTracks;
-        console.log(tracks);
+
     
         callback();
     }
@@ -143,7 +159,7 @@ loadNextBatch(function() {
                 });
               });
 
-          },3000);
+          },5000);
 
           widget.bind(SC.Widget.Events.FINISH, function() {
               playNext();
@@ -239,15 +255,23 @@ $('#nextb').click(function() {
 
 <?php
 } else {
-    ?><h1>MusicaLibre</h1>
+    ?>
     
-    Play songs available for commercial sharing. All are licenced under creative commons and fine for commercial usage for free, such as playing in the restaurants. They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>. (As they are uploaded by users, they can vary in quality and genre)<br><br>
+
+    
+   
+    
+    Play songs available for commercial sharing!
+    <br><br>
+    All are licenced under creative commons and fine for commercial usage for free, such as playing in the restaurants. <br><br>
+    They are automatically taken from <a href="http://soundcloud.com">SoundCloud.com</a>. (As they are uploaded by users, they can vary in quality and genre)<br><br>
     
     The songs can start to repeat after about two hours.
+    <br><hr>
     
     <form action="index.php" method="get">Genre name:
-<input type="text" name="genre" value="pop">
-<input type="submit" value="Search"">
+<input type="text" name="genre" value="pop"><br>
+<input type="submit" value="Search" class="btn btn-large btn-primary">
 </form>
 <br><br>Searches to try:<br>
 <a href="http://karelbilek.com/musicalibre/index.php?genre=jazz">jazz</a><br>
@@ -257,9 +281,13 @@ $('#nextb').click(function() {
 <a href="http://karelbilek.com/musicalibre/index.php?genre=pop">pop</a><br>
 <a href="http://karelbilek.com/musicalibre/index.php?genre=chillout">chillout</a><br>
 
+
+
 <?php
 }?>
+<hr>
 
-<br><br>
 <a href="https://github.com/pirati-cz/musicalibre">Fork on GitHub!</a>
-<!---Validity? Ain't nobody got time for that!--->
+</center>
+</div>
+</body>
